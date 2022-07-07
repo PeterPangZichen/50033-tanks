@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     public TankManager[] m_Tanks;               
     public List<Transform> wayPointsForAI;
 
+    public AudioClip winSound; 
+    public AudioSource source; 
+
     private int m_RoundNumber;                  
     private WaitForSeconds m_StartWait;         
     private WaitForSeconds m_EndWait;           
@@ -28,6 +31,8 @@ public class GameManager : MonoBehaviour
     {
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
+
+        source = GetComponent<AudioSource>();
 
         SpawnAllTanks();
         SetCameraTargets();
@@ -168,6 +173,10 @@ public class GameManager : MonoBehaviour
 
         if (m_GameWinner != null)
             sb.Append($"{m_GameWinner.m_ColoredPlayerText} WINS THE GAME!");
+        
+        
+        Play();
+
 
         return sb.ToString();
     }
@@ -189,4 +198,11 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < m_Tanks.Length; i++) m_Tanks[i].DisableControl();
     }
+
+    public void Play(){
+        Debug.Log("test123");
+        source.PlayOneShot(winSound, 1.0f);
+    }
+
+    
 }

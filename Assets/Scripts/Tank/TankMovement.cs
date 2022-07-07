@@ -17,7 +17,11 @@ public class TankMovement : MonoBehaviour
     private Rigidbody m_Rigidbody;         
     private float m_MovementInputValue;    
     private float m_TurnInputValue;        
-    private float m_OriginalPitch;         
+    private float m_OriginalPitch;   
+
+    private float powerUpTimer = 0.0f;
+    private float coolDownTimer = 0.0f;
+    private bool powerUp = false;
 
 
     private void Awake()
@@ -55,6 +59,7 @@ public class TankMovement : MonoBehaviour
         m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
 
         EngineAudio ();
+        PowerUp();
     }
 
 
@@ -95,5 +100,29 @@ public class TankMovement : MonoBehaviour
         float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
         Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
         m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
+    }
+
+    private void PowerUp(){
+        powerUpTimer -= Time.deltaTime;
+        coolDownTimer -= Time.deltaTime;
+        // Use powerup
+        if(!powerUp&&coolDownTimer<=0&&Input.GetKeyDown("j")){
+            Debug.Log("test");
+            powerUp = true;
+            coolDownTimer = 10.0f;
+            powerUpTimer = 2.0f;
+            m_Speed *= 2.0f;
+            m_TurnSpeed *= 2.0f;
+        }
+        // Powerup ends
+        if(powerUp&&powerUpTimer<=0){
+            powerUp = false;
+            m_Speed *= 0.5f;
+            m_TurnSpeed *= 0.5f;
+        }
+        // If not using powerUp, refresh
+        if(!powerUp){
+            powerUpTimer = 2.0f;
+        }
     }
 }
